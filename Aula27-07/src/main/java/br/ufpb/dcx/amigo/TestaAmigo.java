@@ -6,21 +6,40 @@ import java.util.List;
 
 public class TestaAmigo {
 
-    public static void main(String [] args){
-        List<Amigo> lista = new LinkedList<>();
-        lista.add(new Amigo("Zulmira", "zulmira@dcx.ufpb.br"));
-        lista.add(new Amigo("José", "jose@dcx.ufpb.br"));
-        lista.add(new Amigo("Maria", "maria@dcx.ufpb.br"));
-        lista.add(new Amigo("Carlos", "carlos@dcx.ufpb.br"));
-        System.out.println("Lista desordenada:");
-        for (Amigo a: lista){
-            System.out.println("Nome:"+a.getNome());
+    public static void main(String [] args) throws AmigoInexistenteException {
+
+
+        List<Amigo> listaAmigos = new LinkedList<>();
+        List<Mensagem> listaMensagens = new LinkedList<>();
+        SistemaAmigo sistema = new SistemaAmigo(listaAmigos,listaMensagens);
+
+        sistema.cadastraAmigo("José", "jose@dcx.ufpb.br");
+        sistema.cadastraAmigo("Maria", "maria@dcx.ufpb.br");
+
+
+        try {
+            sistema.configuraAmigoSecretoDe("jose@dcx.ufpb.br", "maria@dcx.ufpb.br");
+            sistema.configuraAmigoSecretoDe("maria@dcx.ufpb.br", "jose@dcx.ufpb.br");
+        } catch (AmigoInexistenteException e) {
+            e.getMessage();
         }
 
-        System.out.println("Lista ORDENADA:");
-        Collections.sort(lista);
-        for (Amigo a: lista){
-            System.out.println("Nome:"+a.getNome());
+        sistema.enviarMensagemParaAlguem("Oii lindo", "maria@dcx.ufpb.br", "jose@dcx.ufpb.br", true);
+        sistema.enviarMensagemParaTodos("Olá para todos", "jose@dcx.ufpb.br", true);
+
+        List<Mensagem> mensagemsAnonimas = sistema.pesquisaMensagensAnonimas();
+        for(Mensagem m : mensagemsAnonimas) {
+            System.out.println(m.getTextoCompletoAExibir());
         }
+
+        try {
+            String amigoSecretoPesquisa = sistema.pesquisaAmigoSecretoDe("jose@dcx.ufpb.br");
+            if(amigoSecretoPesquisa.equals("maria@dcx.ufpb.br")) {
+                System.out.println("OK");
+            }
+        } catch (AmigoNaoSorteadoException e) {
+            e.getMessage();
+        }
+
     }
 }
