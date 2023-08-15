@@ -22,7 +22,7 @@ public class MensagemParaAlguem extends Mensagem {
         if(super.ehAnonima()) {
             return "Mensagem para: " + getEmailDestinatario() + ". Texto: " + super.getTexto();
         } else {
-            return "Mensagem de: " + super.getEmailRemetente() + ". Para: " + this.getEmailDestinatario();
+            return "Mensagem de: " + super.getEmailRemetente() + ". Para: " + this.getEmailDestinatario() +". Texto: " + super.getTexto();
         }
     }
 }
