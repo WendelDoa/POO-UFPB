@@ -1,30 +1,28 @@
 package br.ufpb.dcx.amigo;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-public class SistemaAmigo {
+public class SistemaAmigoMap {
 
-    private List<Amigo> amigos;
+    private Map<String, Amigo> amigos = new HashMap<>();
     private List<Mensagem> mensagens;
 
-    public SistemaAmigo() {
-        this.amigos = new ArrayList<>();
+    public SistemaAmigoMap() {
+        this.amigos = new HashMap<>();
         this.mensagens = new ArrayList<>();
     }
 
     public void cadastraAmigo(String nomeAmigo, String emailAmigo) throws AmigoJaExisteException {
-        for(Amigo a : amigos) {
+        for(Amigo a : amigos.values()) {
             if(a.getEmail().equals(emailAmigo)) {
                 throw new AmigoJaExisteException("Amigo já existe!");
             }
         }
         Amigo amigo = new Amigo(nomeAmigo, emailAmigo);
-        amigos.add(amigo);
+        amigos.put(emailAmigo, amigo);
     }
 
     public Amigo pesquisaAmigo(String emailAmigo) throws AmigoInexistenteException {
-        for(Amigo a : amigos) {
+        for(Amigo a : amigos.values()) {
             if(a.getEmail().equals(emailAmigo)) {
                 return a;
             }
@@ -57,7 +55,7 @@ public class SistemaAmigo {
     }
 
     public void configuraAmigoSecretoDe(String emailDaPessoa, String emailAmigoSorteado) throws AmigoInexistenteException {
-        for(Amigo a : amigos) {
+        for(Amigo a : amigos.values()) {
             if (a.getEmail().equals(emailDaPessoa)) {
                 a.setEmailAmigoSorteado(emailAmigoSorteado);
                 return;
@@ -67,7 +65,7 @@ public class SistemaAmigo {
     }
 
     public String pesquisaAmigoSecretoDe(String emailDaPessoa) throws AmigoInexistenteException, AmigoNaoSorteadoException {
-        for (Amigo a : this.amigos) {
+        for (Amigo a : amigos.values()) {
             if (a.getEmail().equals(emailDaPessoa)) {
                 if (a.getEmailAmigoSorteado() == null) {
                     throw new AmigoNaoSorteadoException("Não foi sorteado o amigo de" + emailDaPessoa);

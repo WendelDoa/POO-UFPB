@@ -6,13 +6,10 @@ import java.util.Collections;
 
 public class TestaSistemaAmigoGUI {
 
-    public static void main(String[] args) {
-
-        List<Amigo> amigos = new ArrayList<>();
-        List<Mensagem> mensagens = new ArrayList<>();
+    public static void main(String[] args) throws AmigoJaExisteException {
 
         Scanner scanner = new Scanner(System.in);
-        SistemaAmigo sistema = new SistemaAmigo(amigos, mensagens);
+        SistemaAmigo sistema = new SistemaAmigo();
 
         System.out.print("Digite a quantidade de amigos que vão participar da brincadeira: ");
         int quantAmigos = Integer.parseInt(scanner.nextLine());
@@ -23,12 +20,16 @@ public class TestaSistemaAmigoGUI {
             String nome = scanner.nextLine().toLowerCase();
             System.out.println("Digite o email: ");
             String email = scanner.nextLine().toLowerCase();
-            Amigo amigo = new Amigo(nome, email);
             sistema.cadastraAmigo(nome, email);
-            amigos.add(amigo);
+        }
+        try {
+            sistema.configuraAmigoSecretoDe("jose@dcx.ufpb.br", "maria@dcx.ufpb.br");
+            sistema.configuraAmigoSecretoDe("maria@dcx.ufpb.br","jose@dcx.ufpb.br");
+        } catch (AmigoInexistenteException e) {
+            e.getMessage();
         }
 
-        List<Amigo> amigosSorteio = new ArrayList<>(amigos);
+        List<Amigo> amigosSorteio = new ArrayList<>();
         Collections.shuffle(amigosSorteio);
 
         for(int i = 0; i < quantAmigos; i++) {
@@ -59,11 +60,6 @@ public class TestaSistemaAmigoGUI {
         String cond2 = scanner.nextLine().toUpperCase();
 
         String emailRemetente = null;
-        for(Amigo a : amigos) {
-            if(nome.equals(a.getNome())) {
-                emailRemetente = a.getEmail();
-            }
-        }
 
         boolean ehAnonima;
         if (cond1.equals("SIM")) {
@@ -74,20 +70,14 @@ public class TestaSistemaAmigoGUI {
 
         if(cond2.equals("TODOS")) {
             sistema.enviarMensagemParaTodos(texto, emailRemetente, ehAnonima);
+
         } else {
-            System.out.println("Digite o nome do destinatario");
-            String nomeDestinatario = scanner.nextLine().toLowerCase();
-            String emailDestinatario = null;
-            for(Amigo a : amigos) {
-                if(nomeDestinatario.equals(a.getNome())) {
-                    emailDestinatario = a.getEmail();
-                }
-            }
+            System.out.println("Digite o email do destinatario");
+            String emailDestinatario = scanner.nextLine().toLowerCase();
             sistema.enviarMensagemParaAlguem(texto, emailRemetente, emailDestinatario, ehAnonima);
         }
 
-        mensagens = sistema.pesquisaTodasAsMensagens();
-        for(Mensagem m : mensagens) {
+        for(Mensagem m : sistema.pesquisaTodasAsMensagens()) {
             System.out.println("Todas as mensagens abaixo");
             System.out.println(m.getTextoCompletoAExibir());
         }

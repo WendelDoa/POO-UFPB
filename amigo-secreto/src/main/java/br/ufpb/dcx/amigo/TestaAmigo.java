@@ -6,12 +6,9 @@ import java.util.List;
 
 public class TestaAmigo {
 
-    public static void main(String [] args) throws AmigoInexistenteException {
+    public static void main(String [] args) throws AmigoInexistenteException, AmigoJaExisteException {
 
-
-        List<Amigo> listaAmigos = new LinkedList<>();
-        List<Mensagem> listaMensagens = new LinkedList<>();
-        SistemaAmigo sistema = new SistemaAmigo(listaAmigos,listaMensagens);
+        SistemaAmigo sistema = new SistemaAmigo();
 
         sistema.cadastraAmigo("José", "jose@dcx.ufpb.br");
         sistema.cadastraAmigo("Maria", "maria@dcx.ufpb.br");
